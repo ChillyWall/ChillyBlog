@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 支离Chilly的个人博客
+title: 郭金锋的博客
 subtitle: "渐吾身于尘垢兮，维余生之趋光"
 description: ""
-keywords: Computer, Programming, C++
-author: 支离Chilly
+keywords:
+author: 郭金锋
 language: zh-CN
 timezone: "Asia/Shanghai"
 

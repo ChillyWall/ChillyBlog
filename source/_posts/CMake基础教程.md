@@ -1,11 +1,13 @@
 ---
-title: CMake基础教程
-date: 2025-05-09 15:00
+title: "CMake基础教程"
+date: "2025-05-11"
+author: "郭金锋"
+keywords: [CMake, C/C++]
 tags:
   - CMake
   - C/C++
 categories:
-  - [Languages, C/C++, CMake]
+  - [Languages, CMake]
 mermaid: true
 ---
 
@@ -316,4 +318,4 @@ CMake的基础使用到这里就结束了。本文介绍了CMake的基本概念�
 
 能够熟练使用上面介绍的几个简单函数，就足以使用cmake来管理构建一些简单的没有外部依赖的项目了。
 
-更深入的部分，比如调用第三方库、编译选项、目标属性、接口库、控制语句、安装等，读者可以关注后续的CMake进阶教程。
+更深入的部分，比如调用第三方库、编译选项、目标属性、接口库、控制语句、安装等，读者可以关注后续的[CMake进阶教程](/ChillyBlog/2025/05/13/CMake进阶教程)。

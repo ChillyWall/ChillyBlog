@@ -202,7 +202,7 @@ C/C++项目中，我们一般将头文件与源文件进行分离，分别放入
 
 首先是项目的一些基本设置，比如要求的cmake版本、项目名称、使用的语言、使用的标准等等。
 
-```CMakeLists.txt
+```CMake
 cmake_minimum_required(VERSION 3.16)
 project(
     MineSweeper
@@ -261,9 +261,9 @@ Modern CMake可以说是面向目标编程（Target-oriented programming），�
 
 #### executable可执行目标
 
-我们先来分析`ui`模块的CMakeLists.txt文件。
+我们先来分析`ui`模块的CMakeLists.txt文件。这是其前三行。
 
-```CMakeLists.txt
+```CMake
 add_executable(MineSweeper src/main.cpp src/ui.cpp)
 target_link_libraries(MineSweeper PRIVATE msutils)
 target_include_directories(MineSweeper PRIVATE include)
@@ -275,9 +275,9 @@ target_include_directories(MineSweeper PRIVATE include)
 
 #### library库目标
 
-之后分析`msutils`的CMakeLists.txt文件。
+之后分析`msutils`的CMakeLists.txt文件。这是其前两行。
 
-```CMakeLists.txt
+```CMake
 add_library(msutils STATIC src/Cell.cpp src/Grid.cpp src/Sweeper.cpp)
 target_include_directories(msutils PUBLIC include)
 ```
@@ -288,9 +288,7 @@ target_include_directories(msutils PUBLIC include)
 
 ### 包含目录
 
-有过C/C++多文件编程经验的读者都知道，编译器在编译时需要知道头文件的位置，需要设置头文件的搜索路径。CMake中使用`target_include_directories`函数来设置头文件搜索路径。
-
-> 注意：所有路径，包括之前指定源文件的路径，若是写成相对路径的格式都是相对于该命令所在的CMakeLists.txt的。
+有过C/C++多文件编程经验的读者都知道，编译器在编译时需要知道头文件的位置，需要设置头文件的搜索路径。
 
 上面两个目标，我们需要为其添加其各自模块的include文件夹到搜索路径中去。
 
@@ -299,6 +297,8 @@ target_include_directories(msutils PUBLIC include)
 #### 作用域
 
 `target_include_directories`函数的第一个参数是目标名称，第二个参数是作用域，`PUBLIC`表示该目录对所有依赖于该目标的目标可见，`PRIVATE`表示仅对该目标可见，`INTERFACE`表示仅对依赖于该目标的目标可见。之后是路径列表。
+
+> 注意：所有路径，包括之前指定源文件的路径，若是写成相对路径的格式都是相对于该命令所在的CMakeLists.txt的。
 
 msutils的头文件设置为PUBLIC，因此MineSweeper链接了msutils之后，会将msutils添加的路径自动添加到其自己的头文件搜索路径。若是PRIVATE，则MineSweeper模块中将不会自动添加。若为`INTERFACE`，则是msutils本身不添加但MineSweeper添加。
 

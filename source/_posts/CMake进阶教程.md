@@ -100,7 +100,11 @@ CMake会设置相应的变量来存储查找结果，变量比较多，详情可
 
 在此模式下，CMake 搜索名为`<lowercasePackageName>-config.cmake`或`<PackageName>Config.cmake`的文件。如果指定了版本详细信息，它还会查找`<lowercasePackageName>-config-version.cmake`或`<PackageName>ConfigVersion.cmake`文件，去做版本相关的处理。这些文件通常在`lib/cmake/PackageName`下面。
 
-该模式下，允许包将自己分为多个组件(Component)，一个组件其实就是一个目标，使用包名作为命名空间。引用一个组件可以通过`PackageName::Component`。
+该模式下，允许包将自己分为多个组件(Component)，一个组件相当于一个子包，其中也可以包含多个目标。一个组件共享一个配置文件，便于选择性安装和包配置。
+
+> 组件不等于目标，一个组件可能含有多个目标，上面Qt6::Gui是Qt6 Gui组件中的一个目标，虽然同名，但不是一个概念。一些比较小的库往往不使用组件，这时候如果以为组件就是目标而擅自在`find_package`中加上`COMPONENTS target REQUIRED`可能会导致找不到组件而报错。
+
+一个包往往会有一个以包名命名的名称空间，引用包中一个目标一般可以通过`PackageName::Component`实现。而如果包中添加了组件，那么每一个组件可能也有各自名称空间，但也有可能设置为和包共用名称空间。这由库的开发者决定。
 
 上面的CMakeLists.txt中使用了`find_package`函数来查找Qt6，便是使用了配置模式。Qt6是个庞大的框架，我们使用其中四个组件，要确保这些组件被找到的方式便是加上`COMPONENTS component1 ...`，这些组件如果有一个没有找到，则视为这个包没有找到。最后的`REQUIRED`表示这是必须的，找不到无法完成配置。
 
@@ -275,7 +279,7 @@ CMake中属性可以影响到方方面面，从编译到构建过程到测试等
 
 比如我们通过各种命令为目标添加的包含目录，最终都会被存储到目标的`INCLUDE_DIRECTORIES`属性中去。链接的库都会被记录到`LINK_LIBRARIES`属性中去。
 
-还有一些其他的，起到特定作用的属性。比如上面`qt_ui`中当操作系统是windows时，会将`MineSweeper-qt`的`WIN32_EXECUTABLE`属性设为`TRUE`。这个属性就属于目标属性，附加于目标上。这个属性为TRUE时会为程序构建一个带有WinMain入口的可执行文件，这使得其成为GUI程序而不是控制台程序。
+还有一些其他的，起到特定作用的属性。比如上面`qt_ui`中当操作系统是windows时，会将`MineSweeper-qt`的`WIN32_EXECUTABLE`属性设为`TRUE`。这个属性为TRUE时会为程序构建一个带有WinMain入口的可执行文件，这使得其成为GUI程序而不是控制台程序。
 
 读取和设置单个属性的命令为`get_property()`和`set_property()`。或者使用`set_target_properties`, `set_source_files_properties`, `set_tests_properties`, `set_directory_properties`为单个目标、源文件、测试、目录设置属性。将`set`改为`get`即对应的读取属性的命令。
 

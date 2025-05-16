@@ -5,11 +5,12 @@ tags:
   - Docker
 categories:
   - [Tools, Docker]
+index_img: /img/categories/docker.png
 ---
 
-Docker是一种虚拟容器应用，与虚拟机不同，Docker容器运行在宿主机的内核上而与宿主机的环境隔离。这使得我们可以在性能损失很小的情况下，方便地创建并管理虚拟环境，防止污染宿主机环境以及相互冲突。
+Docker是一种虚拟容器应用这使我们可以在性能损失很小的情况下，方便地创建并管理虚拟环境。 本教程涵盖Docker的基础操作，帮助初学者快速上手。
 
-本教程涵盖Docker的基础操作，帮助初学者快速上手。
+<!-- more -->
 
 ## 1 安装Docker
 

@@ -7,8 +7,12 @@ tags:
 categories:
   - [Languages, CMake]
 mermaid: true
-category_bar: true
+index_img: /img/categories/cmake.png
 ---
+
+CMake 是一个跨平台的开源构建工具，用于自动化编译、测试和安装软件项目。本文将介绍CMake的基础部分。
+
+<!-- more -->
 
 ## 什么是CMake
 

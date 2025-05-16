@@ -6,6 +6,7 @@ tags:
   - C/C++
 categories:
   - [Languages, CMake]
+category_bar: true
 ---
 
 上一篇文章[CMake基础教程](/ChillyBlog/2025/05/11/CMake基础教程)中介绍了CMake的一些基础用法，可以管理并安装一些简单的小项目。本文是该系列的进阶教程，将会介绍一些CMake的进阶用法，帮助我们更好地管理更复杂的项目。

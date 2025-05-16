@@ -7,6 +7,7 @@ tags:
 categories:
   - [Languages, CMake]
 mermaid: true
+category_bar: true
 ---
 
 ## 什么是CMake

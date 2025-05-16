@@ -9,3 +9,5 @@ layout: about
 如果你对我的博客有任何建议或意见，可以随时联系我。
 
 如果你想与我有更多的交流，欢迎访问我的github、知乎或者给我发邮件。
+
+本博客搭建在Github Pages上，这是该博客的[仓库](https://github.com/ChillyWall/ChillyBlog)。如果你觉得我的文章给你带来了帮助，请给我的仓库点一个star吧。

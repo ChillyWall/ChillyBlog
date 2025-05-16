@@ -767,7 +767,7 @@ post:
 # Based on GitHub Issues
 # See: https://utteranc.es
 utterances:
-  repo: https://github.com/ChillyWall/ChillyBlog
+  repo: ChillyWall/ChillyBlog
   issue_term: title
   label: comments
   theme: github-light

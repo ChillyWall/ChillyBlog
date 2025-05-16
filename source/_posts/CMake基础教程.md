@@ -296,7 +296,7 @@ target_include_directories(msutils PUBLIC include)
 
 `target_include_directories`函数的第一个参数是目标名称，第二个参数是作用域，`PUBLIC`表示该目录对所有依赖于该目标的目标可见，`PRIVATE`表示仅对该目标可见，`INTERFACE`表示仅对依赖于该目标的目标可见。之后是路径列表。
 
-> 注意：所有路径，包括之前指定源文件的路径，若是写成相对路径的格式都是相对于该命令所在的CMakeLists.txt的。
+> 注意：所有路径，包括之前指定源文件的路径，若是写成相对路径的格式都是相对于该命令所在的CMakeLists.txt所在的路径，变量`CMAKE_CURRENT_SOURCE_DIR`的值便是该路径。
 
 msutils的头文件设置为PUBLIC，因此MineSweeper链接了msutils之后，会将msutils添加的路径自动添加到其自己的头文件搜索路径。若是PRIVATE，则MineSweeper模块中将不会自动添加。若为`INTERFACE`，则是msutils本身不添加但MineSweeper添加。
 

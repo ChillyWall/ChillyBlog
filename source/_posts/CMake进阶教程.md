@@ -16,18 +16,6 @@ categories:
 
 上一节已经解读了[MineSweeper](https://github.com/ChillyChill/MineSweeper)的`msutils`和`ui`两个模块的CMakeLists.txt，本节将主要根据`qt_ui`模块的CMakeLists.txt来介绍。
 
-### 使用第三方库
-
-上一篇文章中介绍了如何链接库，但链接的只是我们自己创建的库，而真正开发时自然少不了需要使用第三方库的时候。
-
-使用第三方库，有很多种方法，但最常用的还是使用`find_package`函数来查找。该函数会在系统中查找指定的库，实际上找的是对应库的配置文件。一般的用于开发的库，在安装时都会将配置文件也安到CMake可以找到的位置。
-
-其基础的语法是
-
-```CMake
-find_package(<PackageName> [<version>] [REQUIRED] [COMPONENTS <components>...])
-```
-
 这是`qt_ui`模块的CMakeLists.txt
 
 ```CMake
@@ -77,9 +65,41 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 endif()
 ```
 
-上面的CMakeLists.txt中使用了`find_package`函数来查找Qt6。一个库可以分为一个或数个组件（Component），Qt6是个庞大的框架，我们只使用了其中四个组件。要指定使用的组件就在库名后面添加`COMPONENTS component1 component2 ...`。最后的`REQUIRED`表示这些都是必须的，如果没有找到，CMake在生成构建系统时就会报错，并终止。
+### 使用第三方库
 
-每个组件都是一个目标，我们通过`Package::Component`的方式引用组件对应的目标。上面将四个组件的列表赋值给变量`RUNTIME_LIBS`，之后全部链接到`MineSweeper-qt`上。
+上一篇文章中介绍了如何链接库，但链接的只是我们自己创建的库，而真正开发时自然少不了需要使用第三方库的时候。
+
+使用第三方库，最常用的还是使用`find_package`函数来查找。
+
+其基础的语法是
+
+```CMake
+find_package(<PackageName> [<version>] [REQUIRED] [COMPONENTS <components>...])
+```
+
+其寻找库的方式分为两种，模块模式和配置模式。
+
+#### 模块模式
+
+模块模式通常使用外部提供而不是库本身提供的`Find<PackageName>.cmake`文件来按照特定方式去寻找模块。会在所有在变量`CMAKE_MODULE_PATH`中列出的目录中寻找。如果我们要使用非标准方式提供的模块文件，则只需要将其所在目录添加到该变量中即可。
+
+CMake会设置相应的变量来存储查找结果，变量比较多，详情可以参阅[官方文档](https://cmake.com.cn/cmake/help/latest/manual/cmake-developer.7.html#standard-variable-names)，这里只介绍几个
+
+- `<PackageName>_FOUND`：是否找到
+- `<PackageName>_INCLUDE_DIRS`：模块中所有包含目录的最终集合
+- `<PackageName>_LIBRARIES`：模块中所有的库
+
+如果是按照这种方式查找的，我们可以通过这三个变量判断库有没有找到，并将其包含目录和库全部添加到我们的目标上。
+
+这种模式已经被逐渐弃用，现在主流的是使用配置模式。其使用更符合Modern CMake的基于目标的实现形式。
+
+#### 配置模式
+
+在此模式下，CMake 搜索名为`<lowercasePackageName>-config.cmake`或`<PackageName>Config.cmake`的文件。如果指定了版本详细信息，它还会查找`<lowercasePackageName>-config-version.cmake`或`<PackageName>ConfigVersion.cmake`文件，去做版本相关的处理。这些文件通常在`lib/cmake/PackageName`下面。
+
+该模式下，允许包将自己分为多个组件(Component)，一个组件其实就是一个目标，使用包名作为命名空间。引用一个组件可以通过`PackageName::Component`。
+
+上面的CMakeLists.txt中使用了`find_package`函数来查找Qt6，便是使用了配置模式。Qt6是个庞大的框架，我们使用其中四个组件，要确保这些组件被找到的方式便是加上`COMPONENTS component1 ...`，这些组件如果有一个没有找到，则视为这个包没有找到。最后的`REQUIRED`表示这是必须的，找不到无法完成配置。
 
 ### 控制语句
 

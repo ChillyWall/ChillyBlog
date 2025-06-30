@@ -239,3 +239,78 @@ int main() {
 
 ![example 2](example-2.jpg)
 
+更具体的文档可以到pandoc-crossref的[官方文档](https://lierdakil.github.io/pandoc-crossref)中查看。
+
+### diagram
+
+现在很多Markdown解释器都支持在文档中插入Mermaid和Plantuml来绘制各种类型的图表。由于latex本身并不能渲染这些类型的图表，所以我们需要其他方法将这些图表放进latex中。
+
+最简单的方法自然是先将图表渲染为图片，再插入文档中，之后便与一般图片无异。Pandoc已经有不少这一类的过滤器，这里介绍其中一个：[diagram](https://github.com/pandoc-ext/diagram).
+
+该过滤器支持多种图表格式，包括Mermaid，Plantuml，TikZ，GraphViz，Asymptote和cetz。
+
+它会将这些类型的代码块通过相对应的工具渲染之后将渲染结果插入原位置。
+
+首先我们下载它的最新的release版本，将其中`diagram.lua`文件复制到filters文件夹下面即可。
+
+这里主要介绍Mermaid。
+
+在我之前的一篇文章[CMake基础教程](/ChillyBlog/2025/05/11/CMake基础教程)也曾画过一张简单的Mermaid流程图，这里以它为例：
+
+```mermaid
+flowchart LR
+    A[源代码] --> |预处理| B[处理后源代码]
+    B --> |编译器编译| C[汇编]
+    C --> |汇编器编译| D[目标文件]
+    D --> E[链接器]
+    F[其他目标文件] --> E
+    G[库文件] --> E
+    E --> |链接| H[可执行文件或库文件]
+```
+
+首先，该过滤器本身并不执行写入文件，也就说生成的图片并不会被保存，如果生成的是latex，那么最终我们只会获得一个指向不存在文件的链接。所以我们必须在pandoc命令中添加一个参数`--extract-media=DIR`，其中`DIR`是图片被保存的文件夹。如果是HTML的话，则可以使用参数`--embed-resources`。（不过要html有大把的解释器可以直接保存HTML文件，你大概不会用pandoc）
+
+其次，生成的图片的文件名默认是hash值，毫无辨识度，我们可以在文档中指定其将会生成的文件名。
+
+最后，我们还可以在文档中指定图表的caption和label。如果我们想要将其和pandoc-crossref配合使用，那么我们可以将label指定为`fig:label`的格式，后面引用就与原本的没有区别。
+
+这里根据上面的Mermaid流程图写一个示例：
+
+`````markdown
+---
+CJKmainfont: Noto Serif CJK SC
+CJKmonofont: Noto Sans Mono CJK SC
+CJKsansfont: Noto Sans CJK SC
+figPrefix: 图
+mainfont: Libertinus Serif
+mathfont: Libertinus Math
+monofont: Libertinus Mono
+sansfont: Libertinus Sans
+---
+
+# C/C++的编译过程 {#sec:cc-compilation-process}
+
+C/C++的编译过程通常如下：
+
+```{.mermaid filename="cc-compile-process-flowchart" caption="C/C++的编译流程图" #fig:cc-compile-process}
+flowchart LR
+    A[源代码] --> |预处理| B[处理后源代码]
+    B --> |编译器编译| C[汇编]
+    C --> |汇编器编译| D[目标文件]
+    D --> E[链接器]
+    F[其他目标文件] --> E
+    G[库文件] --> E
+    E --> |链接| H[可执行文件或库文件]
+```
+
+@fig:cc-compile-process 显示了C/C++的编译流程图。
+`````
+
+这里我们只能是会用一般风格来设置代码块的属性，因为diagram.lua的加入表格风格的写法会失效。这里`filename`的值即保存的文件名，`caption`用于设置caption，而label的设置则是直接使用了pandoc-crossref的写法，也可以使用`label`属性显示设置，最终的效果是一样的。
+
+要对其引用，则就像之前一样使用`@fig:cc-compile-process`即可。
+
+这是渲染效果图：
+
+![example 3](example-3.jpg)
+

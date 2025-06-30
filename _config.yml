@@ -55,6 +55,10 @@ prismjs:
   line_number: true
   tab_replace: ""
 
+marked:
+  prependRoot: true
+  postAsset: true
+
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
 # per_page: Posts displayed per page. (0 = disable pagination)

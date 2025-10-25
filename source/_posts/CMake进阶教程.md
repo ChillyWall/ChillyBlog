@@ -53,8 +53,13 @@ target_include_directories(MineSweeper-qt PRIVATE include)
 install(TARGETS MineSweeper-qt DESTINATION bin)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-    # fill in the path to your Qt installation, like C:/Qt/6.8.1/mingw_64
-    set(QT_INSTALL_PATH "C:/Qt/6.8.1/mingw_64")
+    if(NOT DEFINED QT_INSTALL_PATH)
+        message(
+            SEND_ERROR
+            "You must define variable QT_INSTALL_PATH, which is the path where your Qt installed\n"
+            "You can pass it by -D or set it in your CMakePresets.json"
+        )
+    endif()
     install(
         FILES ${QT_INSTALL_PATH}/plugins/platforms/qwindows.dll
         DESTINATION bin/plugins/platforms
@@ -99,6 +104,12 @@ CMake会设置相应的变量来存储查找结果，变量比较多，详情可
 #### 配置模式
 
 在此模式下，CMake 搜索名为`<lowercasePackageName>-config.cmake`或`<PackageName>Config.cmake`的文件。如果指定了版本详细信息，它还会查找`<lowercasePackageName>-config-version.cmake`或`<PackageName>ConfigVersion.cmake`文件，去做版本相关的处理。这些文件通常在`lib/cmake/PackageName`下面。
+
+CMake确定路径结构时常常需要使用相对路径，其会将某个路径作为Prefix，以这些路径作为当前目录取相对路径。比如之前我们设置`CMAKE_INSTALL_PREFIX`变量为某个值，就是以这个路径作为当前目录取相对路径来确定安装目标位置。
+
+CMake搜索配置文件时也会以一系列路径作为前缀路径来确定配置文件的位置，这些前缀路径存储在`CMAKE_PREFIX_PATH`变量中，在Linux中其默认值为`/usr`，通过包管理器安装的C/C++库往往都会将配置文件放到`/usr/lib/cmake`下面包名对应的文件夹中，这些可以被CMake默认搜索到。当我们使用其他方法将库安装到非标准位置时，只需要将其Prefix附加到变量`CMAKE_PREFIX_PATH`中。
+
+比如我们从源码编译一些库并安装到`~/.local`下（安装时指定`CMAKE_INSTALL_PREFIX`为`~/.local`），要调用时就可以将`~/.local`添加到`CMAKE_PREFIX_PATH`中，一般不建议在`CMakeLists.txt`中直接硬编码，而是通过设置环境变量或在预设文件中设置该变量，又或者调用cmake时手动传入。
 
 该模式下，允许包将自己分为多个组件(Component)，一个组件相当于一个子包，其中也可以包含多个目标。一个组件共享一个配置文件，便于选择性安装和包配置。
 

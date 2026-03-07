@@ -106,3 +106,13 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ""
+
+feed:
+  type: atom
+  path: rss.xml
+  limit: 20
+  content: true
+  content_limit: 140
+  content_limit_delim: " "
+  order_by: -date
+  autodiscovery: true
